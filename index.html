@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>find one</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            background: #FFD700;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-button:hover {
+            background: #FFC700;
+        }
+        
+        .tab-button.active {
+            background: #FFA500;
+            border-bottom-color: #FF8C00;
+            color: #000000;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        #map, #map1, #map2 {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .contact-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .contact-item h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .contact-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .contact-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'tab1')">Wayout.au.fri</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2')" style="font-size: 48px !important;">יוחנן פאולוס</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3')">Lift(leaving later)</button>
+        </div>
+        
+        <div id="tab1" class="tab-content active">
+            <h3 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 24px;">Совпадение</h3>
+            <div id="map1"></div>
+            <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #FFD700;">
+                <p style="color: #000; margin: 5px 0; font-size: 18px; font-weight: bold;">born: 1972</p>
+                <p style="color: #000; margin: 5px 0; font-size: 18px; font-weight: bold;">diagnosis: 2007</p>
+                <p style="color: #000; margin: 5px 0; font-size: 18px; font-weight: bold;">today: <span id="currentDate"></span></p>
+                <p style="color: #000; margin: 5px 0; font-size: 18px; font-weight: bold;">here: -33.7658, -61.9576</p>
+                <p style="color: #000; margin: 5px 0; font-size: 18px; font-weight: bold;">and now: LIVING</p>
+            </div>
+            <div class="image-container" style="margin-top: 30px; text-align: center;">
+                <img id="hoverImage" 
+                     src="/home/lacho/Escritorio/Barrios/22887190.png" 
+                     onmouseover="this.src='/home/lacho/Escritorio/Barrios/WhatsApp Image 2025-11-06 at 15.12.35.jpeg'" 
+                     onmouseout="this.src='/home/lacho/Escritorio/Barrios/22887190.png'" 
+                     alt="Parish of Houston" 
+                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer;">
+            </div>
+        </div>
+        
+        <div id="tab2" class="tab-content">
+            <h3 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 24px;">مطابقة</h3>
+            <div id="map"></div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>Phone</h3>
+                    <p><a href="tel:+12812801900">(281) 280-1900</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>Houston Location</h3>
+                    <p>13100 Space Center Blvd, Suite 650<br>
+                    Houston, TX 77059</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>Huntsville Location</h3>
+                    <p>1525 Perimeter Parkway, Suite 240<br>
+                    Huntsville, AL 35806</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>Business Hours</h3>
+                    <p>Monday - Friday: 9:00 AM - 6:00 PM<br>
+                    Saturday: 10:00 AM - 4:00 PM<br>
+                    Sunday: Closed</p>
+                </div>
+            </div>
+            
+            <div class="image-container" style="margin-top: 30px; text-align: center;">
+                <img src="/home/lacho/Escritorio/Barrios/Atom.png" 
+                     alt="Bitcoin Atom" 
+                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+        
+        <div id="tab3" class="tab-content">
+            <h3 style="text-align: center; color: #333; margin-bottom: 20px; font-size: 24px;">Coincidence</h3>
+            <div id="map2"></div>
+            <div class="image-container" style="margin-top: 30px; text-align: center;">
+                <img id="liftImage" 
+                     src="/home/lacho/Escritorio/Barrios/BOOM.png" 
+                     onmouseover="this.src='/home/lacho/Escritorio/Barrios/Mask.png'" 
+                     onmouseout="this.src='/home/lacho/Escritorio/Barrios/BOOM.png'" 
+                     alt="Boom/Mask" 
+                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer;">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Update current date
+        function updateCurrentDate() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+        }
+        
+        // Initialize first tab map when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParishMap();
+            window.map1Initialized = true;
+            updateCurrentDate();
+        });
+        
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            
+            // Initialize maps when tabs are opened
+            if (tabName === 'tab1' && !window.map1Initialized) {
+                initializeParishMap();
+                window.map1Initialized = true;
+            }
+            
+            if (tabName === 'tab2' && !window.mapInitialized) {
+                initializeMap();
+                window.mapInitialized = true;
+            }
+            
+            if (tabName === 'tab3' && !window.map2Initialized) {
+                initializeParisMap();
+                window.map2Initialized = true;
+            }
+        }
+        
+        function initializeParishMap() {
+            const map = L.map('map1').setView([-32.94833, 148.30111], 10);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker([-32.94833, 148.30111]).addTo(map)
+                .bindPopup('<strong>Parish of Houston</strong><br>New South Wales, Australia<br><br>Coordinates: 32°56′54″S 148°18′04″E')
+                .openPopup();
+        }
+        
+        function initializeParisMap() {
+            const map = L.map('map2').setView([-36.7667, 143.5167], 10);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker([-36.7667, 143.5167]).addTo(map)
+                .bindPopup('<strong>Paris, Victoria</strong><br>Australia<br><br>Coordinates: 36°46′S 143°31′E')
+                .openPopup();
+        }
+        
+        function initializeMap() {
+            const map = L.map('map').setView([29.5304, -95.2471], 5);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Houston Location
+            const houstonMarker = L.marker([29.5304, -95.2471]).addTo(map)
+                .bindPopup('<strong>Bitcoin Hub - Houston</strong><br>13100 Space Center Blvd, Suite 650<br>Houston, TX 77059<br><br>Phone: (281) 280-1900');
+            
+            // Huntsville Location  
+            const huntsvilleMarker = L.marker([34.7304, -86.5861]).addTo(map)
+                .bindPopup('<strong>Bitcoin Hub - Huntsville</strong><br>1525 Perimeter Parkway, Suite 240<br>Huntsville, AL 35806<br><br>Phone: (281) 280-1900');
+            
+            // Fit map to show both markers
+            const group = new L.featureGroup([houstonMarker, huntsvilleMarker]);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+    </script>
+</body>
+</html>
